@@ -1,0 +1,16 @@
+body {
+  background-color: #ccc;
+  height: 100vh;
+}
+
+.card-lists {
+  overflow-x: auto;
+}
+
+span.add-tag-button:hover{
+  cursor: pointer;
+}
+
+.tagList{
+  align-items:center;
+}
