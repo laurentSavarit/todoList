@@ -1,95 +1,109 @@
 <template>
   <div class="column is-one-quarter panel listDrop" :data-list-id="id">
-            <div class="panel-heading has-background-info">
-                <div class="columns">
+    <div class="panel-heading has-background-info">
+      <div class="columns">
+        <div class="column">
+          <h2
+            class="has-text-white"
+            @dblclick="handleChangeTitle"
+            :class="{ 'is-hidden': hidden }"
+          >
+            {{ title === newTitle ? title : newTitle }}
+          </h2>
 
-                    <div class="column">
-                        <h2 class="has-text-white" @dblclick="handleChangeTitle" :class="{'is-hidden':hidden}">{{ title === newTitle ? title : newTitle  }}</h2>
-
-                        <form action="" method="POST" :class="{'is-hidden' : !hidden}" enctype="multipart/form-data" @submit.prevent="patchTitleList" >
-                            <input type="hidden" name="list_id" :value="id">
-                            <div class="field has-addons">
-                                <div class="control">
-                                    <input type="text" class="input is-small" name="title" :value="title === newTitle ? title : newTitle"
-                                        placeholder="Nom de la liste" @keyup.esc="escapeChangeTitle" >
-                                </div>
-                                <div class="control">
-                                    <button class="button is-small is-success">Valider</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="column is-narrow">
-                        <button class="is-pulled-right add-card-link button is-info"
-                            aria-label="Ajouter une carte dans la liste">
-                            <span class="icon is-small has-text-white">
-                                <i class="fas fa-plus"></i>
-                            </span>
-                        </button>
-                    </div>
-                </div>
+          <form
+            action=""
+            method="POST"
+            :class="{ 'is-hidden': !hidden }"
+            enctype="multipart/form-data"
+            @submit.prevent="patchTitleList"
+          >
+            <input type="hidden" name="list_id" :value="id" />
+            <div class="field has-addons">
+              <div class="control">
+                <input
+                  type="text"
+                  class="input is-small"
+                  name="title"
+                  :value="title === newTitle ? title : newTitle"
+                  placeholder="Nom de la liste"
+                  @keyup.esc="escapeChangeTitle"
+                />
+              </div>
+              <div class="control">
+                <button class="button is-small is-success">Valider</button>
+              </div>
             </div>
-            <div class="panel-block is-block has-background-light">
-
-            </div>
+          </form>
         </div>
+
+        <div class="column is-narrow">
+          <button
+            class="is-pulled-right add-card-link button is-info"
+            aria-label="Ajouter une carte dans la liste"
+          >
+            <span class="icon is-small has-text-white">
+              <i class="fas fa-plus"></i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="panel-block is-block has-background-light"></div>
+  </div>
 </template>
 
 <script>
-
-import {fetchApi} from "../modules/tools.js";
+import { fetchApi } from "../modules/tools.js";
 
 export default {
-    name:"list",
+  name: "list",
 
-    props:{
-        title: String,
-        id: Number
+  props: {
+    title: String,
+    id: Number,
+  },
+
+  data() {
+    return {
+      connected: this.connect,
+      hidden: false,
+      newTitle: this.title,
+    };
+  },
+
+  methods: {
+    async allList() {
+      console.log("valeur dans list", this.connected);
+      if (this.connect) {
+        return await fetchApi("/list");
+      } else {
+        return false;
+      }
     },
 
-    data(){
-        return{
-            connected: this.connect,
-            hidden: false,
-            newTitle: this.title
-        }
+    handleChangeTitle() {
+      console.log("change title");
+      this.hidden = true;
     },
 
-    methods:{
-        async allList(){
-            console.log("valeur dans list",this.connected);
-            if(this.connect){
-                return await fetchApi("/list");
-            }else{
-                return false;
-            }
-        },
+    escapeChangeTitle() {
+      this.hidden = false;
+    },
 
-        handleChangeTitle(){
-            console.log("change title");
-            this.hidden = true;
+    async patchTitleList(event) {
+      const patchData = new FormData(event.target);
 
-        },
+      const request = await fetchApi(`/list/${this.id}`, "PATCH", patchData);
 
-        escapeChangeTitle(){
-            this.hidden = false;
-        },
-
-        async patchTitleList(event){
-
-            const patchData = new FormData(event.target);
-
-            const request = await fetchApi(`/list/${this.id}`,"PATCH",patchData);
-
-            if(request){
-                this.newTitle = request.title;
-                this.hidden = false;
-                console.log(this.newTitle)
-            } else{
-                alert("Nous n'avons pas réussi à mettre à jour la liste...");
-            }
-        }
-    }
-}
+      if (request) {
+        this.newTitle = request.title;
+        this.hidden = false;
+        console.log(this.newTitle);
+      } else {
+        alert("Nous n'avons pas réussi à mettre à jour la liste...");
+      }
+    },
+  },
+};
 </script>
