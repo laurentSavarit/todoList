@@ -12,13 +12,13 @@
           </div>
         </div>
         <div class="column buttons">
-          <button class="button is-success is-fullwidth" id="addListButton">
+          <button class="button is-success is-fullwidth" id="addListButton" @click="openAddListModal" v-if="connect">
             <span class="icon is-small">
               <i class="fas fa-plus"></i>
             </span>
             &nbsp; Ajouter une liste
           </button>
-          <button class="button is-danger is-fullwidth" id="deleteListButton">
+          <button class="button is-danger is-fullwidth" id="deleteListButton" v-if="connect">
             <span class="icon is-small">
               <i class="fas fa-ban"></i>
             </span>
@@ -27,25 +27,30 @@
         </div>
       </div>
     </div>
+    <add-list-modal @newList="newList"></add-list-modal>
   </section>
 </template>
 
 <script>
 import token from "./components/token.vue";
 import list from "./components/list.vue";
+import addListModal from "./components/addListModal.vue";
 import {fetchApi} from "./modules/tools.js";
+import addListModalVue from './components/addListModal.vue';
 
 
 export default {
   components: {
     token,
-    list
+    list,
+    addListModal
   },
 
   data() {
     return {
       connect: false,
       allLists: null,
+      isActiveAddList: false
     };
   },
 
@@ -54,6 +59,14 @@ export default {
     this.connect = event;
      this.allLists = await fetchApi("/list");
     },
+
+    newList(event){
+      this.allLists.push(event);
+    },
+
+    openAddListModal(){
+      this.$el.querySelector("#addListModal").classList.add("is-active");
+    }
   },
 };
 </script>
