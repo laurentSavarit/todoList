@@ -2,11 +2,13 @@
   <section class="section">
     <div class="container">
       <h1 class="title">oKanban</h1>
-      <token></token>
+      <token @connect="connected"></token>
 
       <div class="columns">
         <div class="column is-full">
-          <div class="card-lists columns"></div>
+          <div class="card-lists columns" v-if="connect">
+            <list></list>
+          </div>
         </div>
         <div class="column buttons">
           <button class="button is-success is-fullwidth" id="addListButton">
@@ -29,11 +31,24 @@
 
 <script>
 import token from "./components/token.vue";
+import list from "./components/list.vue";
 
 export default {
   components: {
-    token
-  }
+    token,
+  },
+
+  data() {
+    return {
+      connect: false,
+      response: [],
+    };
+  },
+
+  methods: {
+    connected(event) {
+      this.connect = event;
+    },
+  },
 };
 </script>
-
