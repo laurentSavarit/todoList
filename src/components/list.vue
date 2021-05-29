@@ -1,17 +1,17 @@
 <template>
-  <div class="column is-one-quarter panel listDrop" data-list-id="A">
+  <div class="column is-one-quarter panel listDrop" :data-list-id="id">
             <div class="panel-heading has-background-info">
                 <div class="columns">
 
                     <div class="column">
-                        <h2 class="has-text-white">Perso</h2>
+                        <h2 class="has-text-white" @dblclick="handleChangeTitle" :class="{'is-hidden':hidden}">{{ title === newTitle ? title : newTitle  }}</h2>
 
-                        <form action="" method="POST" class="is-hidden" enctype="multipart/form-data">
-                            <input type="hidden" name="list_id" value="1">
+                        <form action="" method="POST" :class="{'is-hidden' : !hidden}" enctype="multipart/form-data" @submit.prevent="patchTitleList" >
+                            <input type="hidden" name="list_id" :value="id">
                             <div class="field has-addons">
                                 <div class="control">
-                                    <input type="text" class="input is-small" name="title" value=""
-                                        placeholder="Nom de la liste">
+                                    <input type="text" class="input is-small" name="title" :value="title === newTitle ? title : newTitle"
+                                        placeholder="Nom de la liste" @keyup.esc="escapeChangeTitle" >
                                 </div>
                                 <div class="control">
                                     <button class="button is-small is-success">Valider</button>
@@ -43,9 +43,16 @@ import {fetchApi} from "../modules/tools.js";
 export default {
     name:"list",
 
+    props:{
+        title: String,
+        id: Number
+    },
+
     data(){
         return{
-            connected: this.connect
+            connected: this.connect,
+            hidden: false,
+            newTitle: this.title
         }
     },
 
@@ -56,6 +63,31 @@ export default {
                 return await fetchApi("/list");
             }else{
                 return false;
+            }
+        },
+
+        handleChangeTitle(){
+            console.log("change title");
+            this.hidden = true;
+
+        },
+
+        escapeChangeTitle(){
+            this.hidden = false;
+        },
+
+        async patchTitleList(event){
+
+            const patchData = new FormData(event.target);
+
+            const request = await fetchApi(`/list/${this.id}`,"PATCH",patchData);
+
+            if(request){
+                this.newTitle = request.title;
+                this.hidden = false;
+                console.log(this.newTitle)
+            } else{
+                alert("Nous n'avons pas réussi à mettre à jour la liste...");
             }
         }
     }
