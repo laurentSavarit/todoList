@@ -1,3 +1,4 @@
+<!--component ListModal-->
 <template>
   <div class="modal" id="addListModal">
     <div class="modal-background"></div>
@@ -44,25 +45,32 @@
 </template>
 
 <script>
+//on importe les modules nécessaires
 import { fetchApi } from "../modules/tools.js";
 
 export default {
   name: "modalAddList",
 
   methods: {
+    //methode permettant de fermer la modale
     closeModal() {
       document.querySelector("#addListModal").classList.remove("is-active");
     },
 
+    //methode permettant de valider via l'API l'ajout d'une liste
     async postNewList(event) {
-      const newList = new FormData(event.target);
-      const request = await fetchApi("/list", "POST", newList);
-      if (request) {
-        this.closeModal();
-        this.$emit("newList", request);
-        event.target.reset();
-      } else {
-        alert("Nous n'avons pas réussi à créer la liste...");
+      try {
+        const newList = new FormData(event.target);
+        const request = await fetchApi("/list", "POST", newList);
+        if (request) {
+          this.closeModal();
+          this.$emit("newList", request);
+          event.target.reset();
+        } else {
+          alert("Nous n'avons pas réussi à créer la liste...");
+        }
+      } catch (err) {
+        console.error(err);
       }
     },
   },

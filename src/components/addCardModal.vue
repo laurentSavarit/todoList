@@ -1,3 +1,4 @@
+<!--component CardModal-->
 <template>
   <div class="modal addCardModal">
     <div class="modal-background" @click="closeModal"></div>
@@ -67,31 +68,39 @@
 </template>
 
 <script>
+//on importe les modules nécessaires
 import { fetchApi } from "../modules/tools.js";
 
 export default {
   name: "addCardModal",
 
+  //on recupere des datas suivantes du component parent
   props: {
     list_id: Number,
   },
 
   methods: {
+    //methode permettant de fermer la modale
     closeModal() {
       document
         .querySelectorAll(".addCardModal")
         .forEach((modal) => modal.classList.remove("is-active"));
     },
 
+    //methode permettant d'ajouter une carte via l'API
     async addNewCard(event) {
-      const newCard = new FormData(event.target);
-      const request = await fetchApi("/card", "POST", newCard);
-      if (request) {
-        event.target.reset();
-        this.$emit("newCard", request);
-        this.closeModal();
-      } else {
-        alert("Nous n'avons pas réussi à créer la nouvelle carte...");
+      try {
+        const newCard = new FormData(event.target);
+        const request = await fetchApi("/card", "POST", newCard);
+        if (request) {
+          event.target.reset();
+          this.$emit("newCard", request);
+          this.closeModal();
+        } else {
+          alert("Nous n'avons pas réussi à créer la nouvelle carte...");
+        }
+      } catch (err) {
+        console.error(err);
       }
     },
   },

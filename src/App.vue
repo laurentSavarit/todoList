@@ -1,3 +1,4 @@
+<!--component PARENT-->
 <template>
   <section class="section">
     <div class="container">
@@ -38,18 +39,21 @@
 </template>
 
 <script>
+//on importe l'ensemble des modules et components nécessaires
 import token from "./components/token.vue";
 import list from "./components/list.vue";
 import addListModal from "./components/addListModal.vue";
 import { fetchApi } from "./modules/tools.js";
 
 export default {
+  //les components dont nous allons avoir besoins:
   components: {
     token,
     list,
     addListModal,
   },
 
+  //les datas locales
   data() {
     return {
       connect: false,
@@ -59,24 +63,32 @@ export default {
   },
 
   methods: {
+    //methode permettant de récuperer les listes une fois connecter
     async connected(event) {
-      this.connect = event;
-      this.allLists = await fetchApi("/list");
+      try {
+        this.connect = event;
+        this.allLists = await fetchApi("/list");
+      } catch (err) {
+        console.error(err);
+      }
     },
 
+    //methode permettant d'afficher une liste créer via l'API
     newList(event) {
       this.allLists.push(event);
     },
 
+    //methode permttant d'ouvri la modal pour ajouter une liste
     openAddListModal() {
       this.$el.querySelector("#addListModal").classList.add("is-active");
     },
 
-    deleteList(event){
-      this.allLists = this.allLists.filter(list=>{
+    //methode permettant de supprimer du DOM une liste supprimer via l'API
+    deleteList(event) {
+      this.allLists = this.allLists.filter((list) => {
         return list.id != event;
-      })
-    }
+      });
+    },
   },
 };
 </script>

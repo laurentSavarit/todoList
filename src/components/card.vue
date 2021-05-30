@@ -1,3 +1,4 @@
+<!--Component CARD-->
 <template>
   <div
     class="box"
@@ -103,18 +104,20 @@
 </template>
 
 <script>
+// on importe les outils nécessaires
 import { fetchApi, dragAndDrop } from "../modules/tools.js";
 
 export default {
   name: "card",
 
+  //on recupere des datas du component parent
   props: {
     title: String,
     id: Number,
     order: Number,
     color: String,
   },
-
+  //les datas locals
   data() {
     return {
       card: {
@@ -126,44 +129,57 @@ export default {
   },
 
   methods: {
+    //methode permettant d'effacer une carte via l'API
     async deleteCard() {
-      const request = await fetchApi(`/card/${this.id}`, "DELETE");
-      if (request) {
-        this.$emit("deleteCard", this.id);
-      } else {
-        alert("Nous n'avons pas réussi à supprimer la carte...");
+      try {
+        const request = await fetchApi(`/card/${this.id}`, "DELETE");
+        if (request) {
+          this.$emit("deleteCard", this.id);
+        } else {
+          alert("Nous n'avons pas réussi à supprimer la carte...");
+        }
+      } catch (err) {
+        console.error(err);
       }
     },
 
+    //methode permettant d'afficher le formulaire de midification de carte
     modifyCardForm() {
       this.$el.querySelector(".addCard").classList.add("is-hidden");
       this.$el.querySelector(".formUpdateCard").classList.remove("is-hidden");
     },
 
+    //methode permettant de valider la modification de carte via l'API
     async modifyCardSubmit(event) {
-      const modifyData = new FormData(event.target);
-      const request = await fetchApi(`/card/${this.id}`, "PATCH", modifyData);
-      if (request) {
-        this.card = request;
-        event.target.reset();
-        this.deleteForm();
-      } else {
-        alert("Nousn 'avons pas réussi a modifer la carte...");
+      try {
+        const modifyData = new FormData(event.target);
+        const request = await fetchApi(`/card/${this.id}`, "PATCH", modifyData);
+        if (request) {
+          this.card = request;
+          event.target.reset();
+          this.deleteForm();
+        } else {
+          alert("Nous n'avons pas réussi a modifer la carte...");
+        }
+      } catch (err) {
+        console.error(err);
       }
     },
 
+    //methode permettant d'effacer le formulaire de modification de carte
     deleteForm() {
       this.$el.querySelector(".addCard").classList.remove("is-hidden");
       this.$el.querySelector(".formUpdateCard").classList.add("is-hidden");
     },
 
-    dragStart(event){
-        dragAndDrop.dragStartCard(event);
+    //methodes pour gérer le drag and drop
+    dragStart(event) {
+      dragAndDrop.dragStartCard(event);
     },
 
-    dragEnd(event){
-        dragAndDrop.dragEndCard(event);
-    }
+    dragEnd(event) {
+      dragAndDrop.dragEndCard(event);
+    },
   },
 };
 </script>

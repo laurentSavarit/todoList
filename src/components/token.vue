@@ -1,3 +1,4 @@
+<!--component TOKEN-->
 <template>
   <div v-if="!connected">
     <div class="field has-addons has-addons-centered div-token-add">
@@ -46,11 +47,13 @@
   </div>
 </template>
 <script>
+//on importe les modules nécessaires
 import { fetchApi, token } from "../modules/tools.js";
 
 export default {
   name: "token",
 
+  //les datas locales
   data() {
     return {
       newToken: "",
@@ -60,11 +63,17 @@ export default {
   },
 
   methods: {
+    //methode permettant de demander à l'API un token pour s'identifier
     async fetchToken() {
-      const response = await fetchApi();
-      this.newToken = response;
+      try {
+        const response = await fetchApi();
+        this.newToken = response;
+      } catch (err) {
+        console.error(err);
+      }
     },
 
+    //methode permettant de signaler la bonne connection au component parent
     connect() {
       token.push(this.tokenValue);
       this.connected = true;
