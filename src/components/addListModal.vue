@@ -60,6 +60,7 @@ export default {
       if (request) {
         this.closeModal();
         this.$emit("newList", request);
+        event.target.reset();
       } else {
         alert("Nous n'avons pas réussi à créer la liste...");
       }

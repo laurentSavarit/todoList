@@ -12,6 +12,7 @@
               v-bind:key="list.id"
               :title="list.title"
               :id="list.id"
+              @deleteList="deleteList"
             >
             </list>
           </div>
@@ -27,16 +28,6 @@
               <i class="fas fa-plus"></i>
             </span>
             &nbsp; Ajouter une liste
-          </button>
-          <button
-            class="button is-danger is-fullwidth"
-            id="deleteListButton"
-            v-if="connect"
-          >
-            <span class="icon is-small">
-              <i class="fas fa-ban"></i>
-            </span>
-            &nbsp; Supprimer une liste
           </button>
         </div>
       </div>
@@ -79,6 +70,12 @@ export default {
     openAddListModal() {
       this.$el.querySelector("#addListModal").classList.add("is-active");
     },
+
+    deleteList(event){
+      this.allLists = this.allLists.filter(list=>{
+        return list.id != event;
+      })
+    }
   },
 };
 </script>

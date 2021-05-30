@@ -41,9 +41,15 @@
           <button
             class="is-pulled-right add-card-link button is-info"
             aria-label="Ajouter une carte dans la liste"
+            title="Ajouter une carte dans la liste"
           >
             <span class="icon is-small has-text-white">
               <i class="fas fa-plus"></i>
+            </span>
+          </button>
+          <button class="button is-info" aria-label="supprimer la liste" @click="deleteList" title="Supprimer la liste">
+            <span class="icon is-small has-text-danger">
+              <i class="fas fa-trash-alt"></i>
             </span>
           </button>
         </div>
@@ -104,6 +110,15 @@ export default {
         alert("Nous n'avons pas réussi à mettre à jour la liste...");
       }
     },
+
+    async deleteList(){
+      const requestDelete = await fetchApi(`/list/${this.id}`,"DELETE");
+      if(requestDelete){
+        this.$emit("deleteList", this.id);
+      }else{
+        alert("Nous n'avons pas pu supprimer la liste...");
+      }
+    }
   },
 };
 </script>
