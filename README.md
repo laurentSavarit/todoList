@@ -7,7 +7,7 @@ Notre application de todos listes utilisera une api REST que nous avons developp
 - Modal pour supprimer une liste => finalement, ajout d'un bouton trash sur chaque liste OK
 - Afficher les cartes => OK
 - Ajouter une carte => OK
-- Supprimer une carte
-- Modifier une carte
+- Supprimer une carte => OK
+- Modifier une carte => OK
 - les tags
 - drag and drop

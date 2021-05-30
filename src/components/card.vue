@@ -1,5 +1,11 @@
 <template>
-  <div class="box" :data-card-id="id" :data-card-order="order" draggable="true" :style="`border-bottom: solid 4px ${color}`">
+  <div
+    class="box"
+    :data-card-id="id"
+    :data-card-order="card.order"
+    draggable="true"
+    :style="`border-bottom: solid 4px ${card.color}`"
+  >
     <div class="tagList tags">
       <span
         class="tag icon add-tag-button has-text-primary"
@@ -32,23 +38,25 @@
     </div>
     <div class="columns">
       <div class="addCard column">
-        {{ title }}
+        {{ card.title }}
       </div>
       <form
         action=""
         method="POST"
         class="is-hidden formUpdateCard"
         enctype="multipart/form-data"
+        @submit.prevent="modifyCardSubmit"
       >
-        <input type="hidden" name="id" value="1" />
+        <input type="hidden" name="id" :value="id" />
         <div class="field has-addons">
           <div class="control">
             <input
               type="text"
               class="input is-small"
               name="title"
-              value=""
+              :value="card.title"
               placeholder="Nom de la carte"
+              @keyup.esc="deleteForm"
             />
           </div>
           <div class="control has-icons-left">
@@ -56,7 +64,12 @@
               <i class="fas fa-palette"></i>
             </span>
 
-            <input type="color" class="input is-small" name="color" value="" />
+            <input
+              type="color"
+              class="input is-small"
+              name="color"
+              :value="card.color"
+            />
           </div>
           <div class="control">
             <button class="button is-small is-success">Valider</button>
@@ -67,6 +80,7 @@
         <button
           class="link-modify-card button is-white"
           aria-label="modifier la carte"
+          @click="modifyCardForm"
         >
           <span class="icon is-small has-text-primary">
             <i class="fas fa-pencil-alt"></i>
@@ -87,7 +101,6 @@
 </template>
 
 <script>
-
 import { fetchApi } from "../modules/tools.js";
 
 export default {
@@ -97,18 +110,50 @@ export default {
     title: String,
     id: Number,
     order: Number,
-    color: String
+    color: String,
   },
 
-  methods:{
-      async deleteCard(){
-          const request = await fetchApi(`/card/${this.id}`,"DELETE");
-          if(request){
-              this.$emit("deleteCard",this.id);
-          }else{
-              alert("Nous n'avons pas réussi à supprimer la carte...");
-          }
+  data() {
+    return {
+      card: {
+        title: this.title,
+        order: this.order,
+        color: this.color,
+      },
+    };
+  },
+
+  methods: {
+    async deleteCard() {
+      const request = await fetchApi(`/card/${this.id}`, "DELETE");
+      if (request) {
+        this.$emit("deleteCard", this.id);
+      } else {
+        alert("Nous n'avons pas réussi à supprimer la carte...");
       }
-  }
+    },
+
+    modifyCardForm() {
+      this.$el.querySelector(".addCard").classList.add("is-hidden");
+      this.$el.querySelector(".formUpdateCard").classList.remove("is-hidden");
+    },
+
+    async modifyCardSubmit(event) {
+      const modifyData = new FormData(event.target);
+      const request = await fetchApi(`/card/${this.id}`, "PATCH", modifyData);
+      if (request) {
+        this.card = request;
+        event.target.reset();
+        this.deleteForm();
+      } else {
+        alert("Nousn 'avons pas réussi a modifer la carte...");
+      }
+    },
+
+    deleteForm() {
+      this.$el.querySelector(".addCard").classList.remove("is-hidden");
+      this.$el.querySelector(".formUpdateCard").classList.add("is-hidden");
+    },
+  },
 };
 </script>
