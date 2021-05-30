@@ -12,6 +12,7 @@
               v-bind:key="list.id"
               :title="list.title"
               :id="list.id"
+              :cards="list.cards"
               @deleteList="deleteList"
             >
             </list>

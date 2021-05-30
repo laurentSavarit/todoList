@@ -47,7 +47,12 @@
               <i class="fas fa-plus"></i>
             </span>
           </button>
-          <button class="button is-info" aria-label="supprimer la liste" @click="deleteList" title="Supprimer la liste">
+          <button
+            class="button is-info"
+            aria-label="supprimer la liste"
+            @click="deleteList"
+            title="Supprimer la liste"
+          >
             <span class="icon is-small has-text-danger">
               <i class="fas fa-trash-alt"></i>
             </span>
@@ -55,19 +60,34 @@
         </div>
       </div>
     </div>
-    <div class="panel-block is-block has-background-light"></div>
+    <div class="panel-block is-block has-background-light">
+      <card
+        v-for="card of cards"
+        v-bind:key="card.id"
+        :title="card.title"
+        :id="card.id"
+        :order="card.order"
+        :color="card.color"
+      ></card>
+    </div>
   </div>
 </template>
 
 <script>
 import { fetchApi } from "../modules/tools.js";
+import card from "./card.vue";
 
 export default {
   name: "list",
 
+  components: {
+    card,
+  },
+
   props: {
     title: String,
     id: Number,
+    cards: Array,
   },
 
   data() {
@@ -111,14 +131,14 @@ export default {
       }
     },
 
-    async deleteList(){
-      const requestDelete = await fetchApi(`/list/${this.id}`,"DELETE");
-      if(requestDelete){
+    async deleteList() {
+      const requestDelete = await fetchApi(`/list/${this.id}`, "DELETE");
+      if (requestDelete) {
         this.$emit("deleteList", this.id);
-      }else{
+      } else {
         alert("Nous n'avons pas pu supprimer la liste...");
       }
-    }
+    },
   },
 };
 </script>
