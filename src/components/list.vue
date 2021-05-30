@@ -42,6 +42,7 @@
             class="is-pulled-right add-card-link button is-info"
             aria-label="Ajouter une carte dans la liste"
             title="Ajouter une carte dans la liste"
+            @click="addCardOnList"
           >
             <span class="icon is-small has-text-white">
               <i class="fas fa-plus"></i>
@@ -70,18 +71,21 @@
         :color="card.color"
       ></card>
     </div>
+    <add-card-modal></add-card-modal>
   </div>
 </template>
 
 <script>
 import { fetchApi } from "../modules/tools.js";
 import card from "./card.vue";
+import addCardModal from "./addCardModal.vue";
 
 export default {
   name: "list",
 
   components: {
     card,
+    addCardModal
   },
 
   props: {
@@ -139,6 +143,10 @@ export default {
         alert("Nous n'avons pas pu supprimer la liste...");
       }
     },
+
+    addCardOnList(){
+      this.$el.querySelector(".addCardModal").classList.add("is-active");
+    }
   },
 };
 </script>
