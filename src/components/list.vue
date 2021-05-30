@@ -69,6 +69,7 @@
         :id="card.id"
         :order="card.order"
         :color="card.color"
+        @deleteCard="deleteCard"
       ></card>
     </div>
     <add-card-modal :list_id="id" @newCard="newCard"></add-card-modal>
@@ -151,6 +152,12 @@ export default {
 
     newCard(event){
       this.allCards.push(event);
+    },
+
+    deleteCard(event){
+      this.allCards = this.allCards.filter(card=>{
+        return card.id != event;
+      });
     }
   },
 };

@@ -75,6 +75,7 @@
         <button
           class="link-delete-card button is-white"
           aria-label="supprimer la carte"
+          @click="deleteCard"
         >
           <span class="icon is-small has-text-danger">
             <i class="fas fa-trash-alt"></i>
@@ -86,6 +87,9 @@
 </template>
 
 <script>
+
+import { fetchApi } from "../modules/tools.js";
+
 export default {
   name: "card",
 
@@ -95,5 +99,16 @@ export default {
     order: Number,
     color: String
   },
+
+  methods:{
+      async deleteCard(){
+          const request = await fetchApi(`/card/${this.id}`,"DELETE");
+          if(request){
+              this.$emit("deleteCard",this.id);
+          }else{
+              alert("Nous n'avons pas réussi à supprimer la carte...");
+          }
+      }
+  }
 };
 </script>
