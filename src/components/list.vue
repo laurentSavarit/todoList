@@ -63,7 +63,7 @@
     </div>
     <div class="panel-block is-block has-background-light">
       <card
-        v-for="card of cards"
+        v-for="card of allCards"
         v-bind:key="card.id"
         :title="card.title"
         :id="card.id"
@@ -71,7 +71,7 @@
         :color="card.color"
       ></card>
     </div>
-    <add-card-modal></add-card-modal>
+    <add-card-modal :list_id="id" @newCard="newCard"></add-card-modal>
   </div>
 </template>
 
@@ -99,6 +99,7 @@ export default {
       connected: this.connect,
       hidden: false,
       newTitle: this.title,
+      allCards: this.cards
     };
   },
 
@@ -146,6 +147,10 @@ export default {
 
     addCardOnList(){
       this.$el.querySelector(".addCardModal").classList.add("is-active");
+    },
+
+    newCard(event){
+      this.allCards.push(event);
     }
   },
 };
