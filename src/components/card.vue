@@ -5,6 +5,8 @@
     :data-card-order="card.order"
     draggable="true"
     :style="`border-bottom: solid 4px ${card.color}`"
+    @dragstart="dragStart"
+    @dragend="dragEnd"
   >
     <div class="tagList tags">
       <span
@@ -101,7 +103,7 @@
 </template>
 
 <script>
-import { fetchApi } from "../modules/tools.js";
+import { fetchApi, dragAndDrop } from "../modules/tools.js";
 
 export default {
   name: "card",
@@ -154,6 +156,14 @@ export default {
       this.$el.querySelector(".addCard").classList.remove("is-hidden");
       this.$el.querySelector(".formUpdateCard").classList.add("is-hidden");
     },
+
+    dragStart(event){
+        dragAndDrop.dragStartCard(event);
+    },
+
+    dragEnd(event){
+        dragAndDrop.dragEndCard(event);
+    }
   },
 };
 </script>

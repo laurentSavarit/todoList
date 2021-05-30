@@ -61,7 +61,7 @@
         </div>
       </div>
     </div>
-    <div class="panel-block is-block has-background-light">
+    <div class="panel-block is-block has-background-light" @dragover="dragOver" @drop="drop">
       <card
         v-for="card of allCards"
         v-bind:key="card.id"
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { fetchApi } from "../modules/tools.js";
+import { fetchApi, dragAndDrop } from "../modules/tools.js";
 import card from "./card.vue";
 import addCardModal from "./addCardModal.vue";
 
@@ -158,6 +158,14 @@ export default {
       this.allCards = this.allCards.filter(card=>{
         return card.id != event;
       });
+    },
+
+    dragOver(event){
+      dragAndDrop.dragOverList(event);
+    },
+
+    drop(event){
+      dragAndDrop.dropList(event);
     }
   },
 };

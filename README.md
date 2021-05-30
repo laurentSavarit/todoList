@@ -10,4 +10,4 @@ Notre application de todos listes utilisera une api REST que nous avons developp
 - Supprimer une carte => OK
 - Modifier une carte => OK
 - les tags
-- drag and drop
+- drag and drop => OK
