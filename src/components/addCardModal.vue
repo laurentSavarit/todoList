@@ -92,13 +92,38 @@ export default {
       try {
         const newCard = new FormData(event.target);
         const request = await fetchApi("/card", "POST", newCard);
-        if (request) {
-          event.target.reset();
-          this.$emit("newCard", request);
-          this.closeModal();
-        } else {
-          alert("Nous n'avons pas réussi à créer la nouvelle carte...");
+        request
+          ? request
+          : alert("Nous n'avons pas réussi à créer la carte...");
+
+        if (newCard.get("tag") != "") {
+          const newTag = new FormData();
+          newTag.set("title", newCard.get("tag"));
+          const requestTag = await fetchApi("/tag", "POST", newTag);
+          requestTag
+            ? requestTag
+            : alert("Nous n'avons pas réussi à créer le tag...");
+          const assoForm = new FormData();
+          assoForm.set("tagId", requestTag[0].id);
+          const requestAsso = await fetchApi(
+            `/card/${request.id}/tag`,
+            "POST",
+            assoForm
+          );
+          if (requestAsso) {
+            request.tags = [
+              {
+                id: requestTag[0].id,
+                title: requestTag[0].title,
+              },
+            ];
+          } else {
+            alert("Nous n'avons pas réussi à associer le tag à la carte...");
+          }
         }
+        event.target.reset();
+        this.$emit("newCard", request);
+        this.closeModal();
       } catch (err) {
         console.error(err);
       }

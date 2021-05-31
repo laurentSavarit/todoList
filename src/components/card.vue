@@ -9,36 +9,7 @@
     @dragstart="dragStart"
     @dragend="dragEnd"
   >
-    <div class="tagList tags">
-      <span
-        class="tag icon add-tag-button has-text-primary"
-        title="Ajouter un tag"
-      >
-        <i class="far fa-plus-square fa-lg"></i>
-      </span>
-
-      <form
-        action=""
-        method="POST"
-        class="is-hidden formAddTag"
-        enctype="multipart/form-data"
-      >
-        <div class="field has-addons">
-          <div class="control">
-            <input
-              type="text"
-              class="input is-small"
-              name="title"
-              value=""
-              placeholder="Nom tu tag"
-            />
-          </div>
-          <div class="control">
-            <button class="button is-small is-success">Valider</button>
-          </div>
-        </div>
-      </form>
-    </div>
+    <tag :tags="card.tags" :cardId="id"></tag>
     <div class="columns">
       <div class="addCard column">
         {{ card.title }}
@@ -73,11 +44,14 @@
               name="color"
               :value="card.color"
             />
-          </div>
+            </div>
+          
+          
           <div class="control">
             <button class="button is-small is-success">Valider</button>
           </div>
         </div>
+          
       </form>
       <div class="column is-narrow">
         <button
@@ -106,9 +80,15 @@
 <script>
 // on importe les outils nécessaires
 import { fetchApi, dragAndDrop } from "../modules/tools.js";
+import tag from "./tag.vue";
+
 
 export default {
   name: "card",
+
+  components:{
+    tag
+  },
 
   //on recupere des datas du component parent
   props: {
@@ -116,6 +96,7 @@ export default {
     id: Number,
     order: Number,
     color: String,
+    tags:Array
   },
   //les datas locals
   data() {
@@ -124,7 +105,8 @@ export default {
         title: this.title,
         order: this.order,
         color: this.color,
-      },
+        tags:this.tags
+      }
     };
   },
 

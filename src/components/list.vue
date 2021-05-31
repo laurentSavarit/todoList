@@ -74,6 +74,7 @@
         :id="card.id"
         :order="card.order"
         :color="card.color"
+        :tags="card.tags"
         @deleteCard="deleteCard"
       ></card>
     </div>
