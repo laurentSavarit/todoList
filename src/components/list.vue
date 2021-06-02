@@ -99,9 +99,18 @@ export default {
 
   //on récuperes les data suivantes du component parent:
   props: {
-    title: String,
-    id: Number,
-    cards: Array,
+    title:{
+      type: String,
+      required: true
+    }, 
+    id:{
+      type: Number,
+      required: true
+    }, 
+    cards:{
+      type: Array,
+      required: false
+    } 
   },
 
   //les datas locales:
@@ -117,14 +126,18 @@ export default {
   methods: {
     //methode permettant de récupérer toutes les listes
     async allList() {
-      console.log("valeur dans list", this.connected);
+
       if (this.connect) {
+
         try {
           return await fetchApi("/list");
+
         } catch (err) {
+
           console.error(err);
         }
       } else {
+
         return false;
       }
     },
@@ -141,33 +154,43 @@ export default {
 
     //methode permettant de valider la modification de la liste via l'API
     async patchTitleList(event) {
+
       try {
         const patchData = new FormData(event.target);
 
         const request = await fetchApi(`/list/${this.id}`, "PATCH", patchData);
 
         if (request) {
+
           this.newTitle = request.title;
           this.hidden = false;
-          console.log(this.newTitle);
+  
         } else {
+
           alert("Nous n'avons pas réussi à mettre à jour la liste...");
         }
       } catch (err) {
+
         console.error(err);
       }
     },
 
     //methode permttant de supprimer une liste via l'API
     async deleteList() {
+
       try {
         const requestDelete = await fetchApi(`/list/${this.id}`, "DELETE");
+
         if (requestDelete) {
+
           this.$emit("deleteList", this.id);
+
         } else {
+
           alert("Nous n'avons pas pu supprimer la liste...");
         }
       } catch (err) {
+        
         console.error(err);
       }
     },

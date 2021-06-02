@@ -85,6 +85,7 @@ export default {
 
     //methode permettant de supprimer du DOM une liste supprimer via l'API
     deleteList(event) {
+      
       this.allLists = this.allLists.filter((list) => {
         return list.id != event;
       });

@@ -49,6 +49,7 @@
 import { fetchApi } from "../modules/tools.js";
 
 export default {
+
   name: "modalAddList",
 
   methods: {
@@ -59,18 +60,27 @@ export default {
 
     //methode permettant de valider via l'API l'ajout d'une liste
     async postNewList(event) {
+
       try {
         const newList = new FormData(event.target);
         const request = await fetchApi("/list", "POST", newList);
+
         if (request) {
+
           this.closeModal();
           this.$emit("newList", request);
           event.target.reset();
+
         } else {
+
           alert("Nous n'avons pas réussi à créer la liste...");
+
         }
+
       } catch (err) {
+
         console.error(err);
+        
       }
     },
   },

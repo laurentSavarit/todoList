@@ -65,9 +65,11 @@ export default {
   methods: {
     //methode permettant de demander à l'API un token pour s'identifier
     async fetchToken() {
+
       try {
         const response = await fetchApi();
         this.newToken = response;
+
       } catch (err) {
         console.error(err);
       }
@@ -75,6 +77,7 @@ export default {
 
     //methode permettant de signaler la bonne connection au component parent
     connect() {
+      
       token.push(this.tokenValue);
       this.connected = true;
       this.$emit("connect", this.connected);

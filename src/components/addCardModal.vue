@@ -76,16 +76,23 @@ export default {
 
   //on recupere des datas suivantes du component parent
   props: {
-    list_id: Number,
+    list_id: {
+      type: Number,
+      required: true,
+    },
   },
 
   methods: {
+
     //methode permettant de fermer la modale
     closeModal() {
       document
         .querySelectorAll(".addCardModal")
         .forEach((modal) => modal.classList.remove("is-active"));
     },
+
+
+
 
     //methode permettant d'ajouter une carte via l'API
     async addNewCard(event) {
@@ -97,34 +104,49 @@ export default {
           : alert("Nous n'avons pas réussi à créer la carte...");
 
         if (newCard.get("tag") != "") {
+
           const newTag = new FormData();
+
           newTag.set("title", newCard.get("tag"));
+
           const requestTag = await fetchApi("/tag", "POST", newTag);
+
           requestTag
             ? requestTag
             : alert("Nous n'avons pas réussi à créer le tag...");
+
           const assoForm = new FormData();
+
           assoForm.set("tagId", requestTag[0].id);
+
           const requestAsso = await fetchApi(
             `/card/${request.id}/tag`,
             "POST",
             assoForm
           );
+
           if (requestAsso) {
+
             request.tags = [
               {
                 id: requestTag[0].id,
                 title: requestTag[0].title,
               },
             ];
+
           } else {
             alert("Nous n'avons pas réussi à associer le tag à la carte...");
           }
         }
         event.target.reset();
+
         this.$emit("newCard", request);
+
         this.closeModal();
+
+
       } catch (err) {
+
         console.error(err);
       }
     },

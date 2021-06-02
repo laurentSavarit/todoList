@@ -49,8 +49,14 @@ export default {
   name: "tag",
 
   props: {
-    tags: Array,
-    cardId: Number,
+    tags: {
+      type: Array,
+      required: true
+    },
+    cardId: {
+      type: Number,
+      required: true
+    }
   },
 
   data() {
@@ -61,59 +67,80 @@ export default {
 
   methods: {
     async deleteTagOfCard(event, tagId) {
+
       const requestDeleteAssoc = await fetchApi(
         `/card/${this.cardId}/tag/${tagId}`,
         "DELETE"
       );
+
       requestDeleteAssoc
         ? event.target.parentNode.remove()
         : alert("Nous n'avons pas réussi à supprimer le tag...");
     },
 
     async addNewTag(event) {
+
       const tag = new FormData(event.target);
+
       const responseTag = await fetchApi("/tag", "POST", tag);
+
       responseTag
         ? responseTag
         : alert("Nous n'avons pas réussi à récupérer ou créer le tag...");
+
       const tagId = new FormData();
+
       tagId.set("tagId", responseTag[0].id);
+
       const assoCardTag = await fetchApi(
         `/card/${this.cardId}/tag`,
         "POST",
         tagId
       );
+
       assoCardTag
         ? assoCardTag
         : alert("Nous n'avons pas réussi à faire l'association...");
+
       this.exitFormAddTag();
 
       //on verifie si le tag est déja présent sur la carte...
       const allTags = this.$el.querySelectorAll(".tag");
+
       let control = true;
       allTags.forEach(tag=>tag.innerText == responseTag[0].title ? control = false : null)
 
       if (control) {
+
         this.allTags.push(responseTag[0]);
+
       } else {
+
         alert("Le tag existe déja sur cette carte...");
       }
+
       event.target.reset();
     },
 
     addTagOfCardForm() {
+
       this.$el
         .querySelectorAll(".tag")
         .forEach((tag) => tag.classList.add("is-hidden"));
+
       const form = this.$el.querySelector(".formAddTag");
+
       form.classList.remove("is-hidden");
     },
 
     exitFormAddTag() {
+
       this.$el
         .querySelectorAll(".tag")
         .forEach((tag) => tag.classList.remove("is-hidden"));
+
       const form = this.$el.querySelector(".formAddTag");
+      
       form.classList.add("is-hidden");
     },
   },
