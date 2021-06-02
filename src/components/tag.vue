@@ -55,7 +55,7 @@ export default {
 
   data() {
     return {
-      allTags: this.tags,
+      allTags: this.tags
     };
   },
 
@@ -90,11 +90,10 @@ export default {
 
       //on verifie si le tag est déja présent sur la carte...
       const allTags = this.$el.querySelectorAll(".tag");
-
       let control = true;
-      allTags.forEach(tag=>tag.textContent == responseTag[0].title ? control=false : null);
+      allTags.forEach(tag=>tag.innerText == responseTag[0].title ? control = false : null)
 
-      if (this) {
+      if (control) {
         this.allTags.push(responseTag[0]);
       } else {
         alert("Le tag existe déja sur cette carte...");
@@ -118,7 +117,5 @@ export default {
       form.classList.add("is-hidden");
     },
   },
-
-  computed: {},
 };
 </script>
